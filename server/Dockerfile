@@ -39,3 +39,5 @@ CMD ["npm", "start"]
 #Jos useampi services:
 #docker compose -f docker-compose.dev.yml up -d
 # docker compose -f docker-compose.dev.yml down --volumes
+
+#docker images listaa kaikki imaget
