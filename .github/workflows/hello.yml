@@ -12,11 +12,9 @@ jobs:
       - name: Say Hello
         run: | 
           echo "Hello, World!"
-      - name: date
+      - name: print date
         run: | 
           date
-          - name: print date
-      - name: list files
+      - name: list files in the current directory
         run: | 
           ls
-          - name: list files in the current directory
