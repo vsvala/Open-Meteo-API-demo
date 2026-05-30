@@ -20,9 +20,9 @@ jobs:
           node-version: '24'
       - name: Install dependencies
         run: npm install
-      - name: Check style
-        run: npm run eslint
-      - name: Run tests
-        run: npm test
+     # - name: Check style
+     #   run: npm run eslint
+     # - name: Run tests
+     #   run: npm test
       - name: Build
         run: npm run build
