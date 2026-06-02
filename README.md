@@ -24,11 +24,14 @@ Meteo-API-demo/
 │   ├── src/
 │   │   └── App.jsx
 │   ├── Dockerfile             # Multi-stage build: Node builder → Nginx
+│   ├── dev.Dockerfile         # Development image with Vite hot reload
 │   └── nginx.conf
-└── server/                    # Express-backend
-    ├── server.js
-    ├── Dockerfile             # Node.js-palvelin, slim-image, ei-root-käyttäjä
-    └── docker-compose.yaml
+├── server/                    # Express-backend
+│   ├── server.js
+│   ├── Dockerfile             # Node.js-palvelin, slim-image, ei-root-käyttäjä
+│   └── dev.Dockerfile         # Development image for backend hot reload
+├── docker-compose.yml         # Production-style compose: frontend, backend, nginx reverse proxy
+└── docker-compose.dev.yml     # Development compose: hot-reload front + backend
 ```
 
 ## Harjoittelun kuvaus
@@ -65,9 +68,23 @@ Node.js-palvelin kontitettuna tietoturva- ja tehokkuusperiaatteilla:
 - `COPY --chown=node:node` + `USER node` — sovellus ei pyöri root-käyttäjänä tietoturvasyistä
 - `ENV NODE_ENV=production` — kertoo Expressille, että kyseessä on tuotantoympäristö
 
-### Docker Compose — `server/docker-compose.yaml`
+### Docker Compose — `docker-compose.yml` ja `docker-compose.dev.yml`
 
-Yksinkertainen Compose-tiedosto backendin käynnistämiseen yhdellä komennolla. Harjoiteltiin Composen perusrakennetta (imagen nimi, build-konteksti, porttimap `3001:3001`).
+Tässä projektissa on kaksi eri Docker Compose -kokoonpanoa:
+
+- `docker-compose.yml` — tuotantotyylinen kokoonpano, joka rakentaa frontendin, backendin ja nginx-reverse proxyn. Sovellus ajetaan yhdestä komennosta ja käyttäjälle tarjotaan yksi portti `http://localhost:8080`.
+- `docker-compose.dev.yml` — kehityskokoonpano, jossa frontend ja backend ajetaan hot-reload-tilassa. Frontend käyttää `front/dev.Dockerfile`-tiedostoa ja backend `server/dev.Dockerfile`-tiedostoa.
+
+Molemmat kokevat Docker Composen perusrakenteen: palveluiden nimet (`app`, `server`, `nginx`), build-kontekstit, porttimappaukset ja palveluiden välinen verkko.
+
+`docker-compose.yml` sisältää myös nginx-palvelun, joka toimii reverse-proxyna ja ohjaa liikenteen frontendille ja backendille.
+
+`docker-compose.dev.yml` puolestaan tarjoaa kehityskäyttöön:
+
+- volumet lähdekoodille ja `node_modules`-kansiolle
+- suoran Vite-kehityspalvelimen portissa `5173`
+- backendin portissa `3001`
+- ympäristömuuttujan `BACKEND_URL=http://server:3001`, jotta frontendiä ajettaessa Docker-verkossa backend löytyy palvelunimen `server` kautta
 
 ## How it works
 
@@ -97,10 +114,35 @@ npm run dev      # runs on http://localhost:5173
 
 ### With Docker
 
+This repo includes two Docker Compose configurations:
+
+- `docker-compose.yml` — production-style setup with frontend, backend and nginx reverse proxy
+- `docker-compose.dev.yml` — development setup with hot-reload for the frontend and backend
+
+#### Production-style Docker Compose
+
+Run from the repository root:
+
 ```bash
-cd server
-docker compose up --build
+docker compose -f docker-compose.yml up --build
 ```
+
+Then open:
+
+- `http://localhost:8080` — app served through nginx reverse proxy
+
+#### Development Docker Compose
+
+Run from the repository root:
+
+```bash
+docker compose -f docker-compose.dev.yml up --build
+```
+
+Then open:
+
+- `http://localhost:5173` — Vite frontend
+- `http://localhost:3001` — backend API
 
 ## API endpoint
 
