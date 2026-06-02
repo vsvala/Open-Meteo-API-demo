@@ -1,0 +1,57 @@
+services:
+  app:
+    image: front
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    networks:
+      - app-network
+
+  server:
+    image: server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:1.29
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - 8080:80 # this is needed
+    container_name: reverse-proxy
+    depends_on:
+      - app
+      - server
+    networks:
+      - app-network
+
+networks:
+  app-network:
+
+
+#open -a Docker
+#both
+#docker compose -f docker-compose.yml up --build
+
+# Ctrl+C pysäyttää, tai toisessa terminaalissa:
+#docker compose -f docker-compose.dev.yml down
+
+#
+  #docker compose -f docker-compose.yml build
+  #docker compose -f docker-compose.yml up 
+  
+  #docker info
+
+#docker ps listaa kaikki kontit
+#docker ps -a listaa kaikki kontit, myös pysäytetyt
+#docker images listaa kaikki imaget
+#docker stop CONTAINER_ID
+#docker kill CONTAINER_ID
+
+#http://localhost:8080 nginx reverse proxy, joka ohjaa liikenteen oikeaan konttiin
+
+
+#Katso nginx-logi:docker compose -f docker-compose.yml logs nginx

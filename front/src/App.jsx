@@ -5,7 +5,7 @@ import { useState } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  //const [count, setCount] = useState(0)
   const [city, setCity] = useState("Helsinki");
   const [data, setData] = useState(null);
   //const [loading, setLoading] = useState(false);
@@ -15,7 +15,8 @@ function App() {
 
  async function getWeather() {
    const res = await fetch(
-     `http://localhost:3001/api/weather?city=${city}`
+    // `http://localhost:3001/api/weather?city=${city}`
+     `/api/weather?city=${city}`
    );
    const json = await res.json();
    setData(json);
@@ -49,23 +50,27 @@ function App() {
           <h1>Weather today</h1>
           <p>
             Testataan Open-meteo API:sta säätietojen ja paikan hakua forecast ja geolocatio apista ja sitten laitetaan sovellus docker konttiin pyörimään.
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
+            Edit 
           </p>
         </div>
-        <button
+        {/* <button
           type="button"
           className="counter"
           onClick={() => setCount((count) => count + 1)}
         >
           Count is {count}
-        </button>
+        </button> */}
       </section>
+      </>
+  )
+}
+export default App
 
-      <div className="ticks"></div>
+      {/*     <div className="ticks"></div>
 
       <section id="next-steps">
        <div id="docs">
-         {/*   <svg className="icon" role="presentation" aria-hidden="true">
+       <svg className="icon" role="presentation" aria-hidden="true">
             <use href="/icons.svg#documentation-icon"></use>
           </svg>
           <h2>Documentation</h2>
@@ -84,8 +89,8 @@ function App() {
             <use href="/icons.svg#social-icon"></use>
           </svg>
           <h2>Connect with us</h2>
-          <p>Join the Vite community</p> */}
-          <ul>
+          <p>Join the Vite community</p> 
+          <ul>*/}
             {/* <li>
               <a href="https://github.com/vitejs/vite" target="_blank">
                 <svg
@@ -109,7 +114,7 @@ function App() {
                 </svg>
                 Discord
               </a>
-            </li> */}
+            </li> 
           
           </ul>
         </div>
@@ -119,6 +124,4 @@ function App() {
       <section id="spacer"></section>
     </>
   )
-}
-
-export default App
+}*/}

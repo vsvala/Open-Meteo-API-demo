@@ -1,0 +1,46 @@
+
+# configuration file used by Docker Compose to define and run multi-container Docker applications
+#this case both back and frontend in development mode with hot reload
+
+services:
+  app:
+    image: front
+    build:
+      context: ./front
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./front:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 5173:5173
+    environment:
+      - BACKEND_URL=http://server:3001
+    container_name: front
+
+  server:
+    image: server
+    build:
+      context: ./server
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./server:/usr/src/app
+    ports:
+      - 3001:3001
+    container_name: server
+
+
+#ajaminen projektin juuressa
+
+#open -a Docker
+ #docker compose -f docker-compose.dev.yml up --build
+#Pysäyttäminen:
+
+
+# Ctrl+C pysäyttää, tai toisessa terminaalissa:
+#docker compose -f docker-compose.dev.yml down
+
+# services: definitions for each container/service in your app
+#networks: how services communicate with each other
+#volumes: shared or persistent storage
+#environment: environment variables for services
+#ports: port mappings from containers to the host

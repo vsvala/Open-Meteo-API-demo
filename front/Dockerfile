@@ -29,13 +29,13 @@ COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # specify which port to expose
-EXPOSE 5173
+EXPOSE 80 
+#nginx listens on port 80 by default
+#EXPOSE 5173
 
 #Nginx web server eli käynnistää web-palvelimen
 CMD ["nginx", "-g", "daemon off;"]
 #	web server -g	anna config komentoriviltä daemon off;	älä mene taustalle
-
-
 
 
 # install serve to run the app
@@ -52,6 +52,6 @@ CMD ["nginx", "-g", "daemon off;"]
 #docker ps
 #docker info
 
-#docker ps listaa kaikki kontit
+#docker ps listaa kaikki imaget
 #docker stop CONTAINER_ID
 #docker kill CONTAINER_ID
